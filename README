@@ -1,15 +1,22 @@
 RecordSelect
 ============
 
-(c) 2007 - Lance Ivy
+(c) 2011 - Xiaoming Lu
 
-RecordSelect is a Rails widget to help you pick one record out of many. I designed it as a more usable and performant alternative to generating a massive dropdown list. It relies on AJAX for the cooler uses (all the provided view helpers rely on JavaScript?) but can also function in a pure-http fashion (although multi-select support is provided in a pure-JavaScript implementation).
+Background: Modify record_select to use Thinking Sphinx search instead of traditional database search (eg Mysql search). Also want to allow user to 
+search by record id, instead of only text field. 
 
-Please see the ActionView::Helpers::RecordSelectHelpers for the most common API. More documentation (and HOWTOs) can be found online at http://code.google.com/p/recordselect, and a demo application is available at http://recordselect.googlecode.com/svn/demo.
+Model: 
+Needs to set up record_select to choose whether to disallow Thinking Sphinx search. By default, if :wurl_disable_thinking_sphinx is not set,
+record_select will use Thinking Sphinx search. If :wurl_allow_search_by_id is set, then when user types in valid record id in the search box,
+record_select will search by id, using model.find_by_id(id). 
+Example:
+record_select :per_page => 10, :search_on => 'title', :order_by=>'title',
+                :text_search =>:full, :model=>:feed, :label=>'record_select_item',
+                :wurl_allow_search_by_id=>true
+                # optional :wurl_disable_thinking_sphinx=>true
+Of course you also need to set up is_index block to use Thinking Sphinx search. 
 
 = DEPENDENCIES
 This depends on the excellent Paginator gem by Bruce Williams. This simple gem is available at paginator.rubyforge.org.
 
-
-If you would like to use jquery:
-uncomment line #RecordSelect::Config.js_framework = :jquery in init.rb
